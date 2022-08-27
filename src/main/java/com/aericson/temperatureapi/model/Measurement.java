@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
-@Document("testTempCollection") //TODO Update to "tempdata" when working
+@Document("tempdata")
 @Data
 public class Measurement {
 
