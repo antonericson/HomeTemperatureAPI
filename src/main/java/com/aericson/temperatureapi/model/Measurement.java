@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 public class Measurement {
 
     private LocalDateTime time;
-    private int temperature;
-    private int humidity;
+    private float temperature;
+    private float humidity;
     private String sensorId;
 
-    public Measurement(int temperature, int humidity, String sensorId) {
+    public Measurement(float temperature, float humidity, String sensorId) {
         super();
         this.temperature = temperature;
         this.humidity = humidity;
