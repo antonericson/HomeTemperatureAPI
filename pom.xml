@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.aericson</groupId>
-	<artifactId>temperatureapi</artifactId>
+	<artifactId>temperatureApi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>temperatureApi</name>
 	<description>Home temperature API</description>
