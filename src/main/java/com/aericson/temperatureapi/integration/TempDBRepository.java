@@ -4,7 +4,6 @@ import com.aericson.temperatureapi.model.Measurement;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 public interface TempDBRepository extends MongoRepository<Measurement, String> {
