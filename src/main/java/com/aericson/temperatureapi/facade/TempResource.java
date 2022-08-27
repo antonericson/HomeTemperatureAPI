@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/temp")
+@RequestMapping("/sensordata")
 public class TempResource {
 
     private final TempService tempService;
@@ -24,12 +24,15 @@ public class TempResource {
     @CrossOrigin() // TODO Add origin?
     @PostMapping
     public ResponseEntity<Boolean> addMeasurements(@RequestHeader(name = "uuidKey") String uuidKey, @RequestBody MeasurementsDTO measurementsDTO) throws Exception {
-        return authHelper.isAuthorized(uuidKey) ? ResponseEntity.ok(tempService.addMeasurement(measurementsDTO)) : new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        return authHelper.isAuthorized(uuidKey) ? tempService.addMeasurement(measurementsDTO) : new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @CrossOrigin() // TODO Add origin?
     @GetMapping
-    public ResponseEntity<List<Measurement>> getAllMeasurements(@RequestHeader(name = "uuidKey") String uuidKey) throws Exception {
-        return authHelper.isAuthorized(uuidKey) ? ResponseEntity.ok(tempService.getAllMeasurements()) : new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    public ResponseEntity<List<Measurement>> getMeasurements(
+            @RequestHeader(name = "uuidKey") String uuidKey,
+            @RequestParam(required = false) String fromDate,
+            @RequestParam(required = false) String toDate) throws Exception {
+        return authHelper.isAuthorized(uuidKey) ? ResponseEntity.ok(tempService.getMeasurements(fromDate, toDate)) : new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 }
