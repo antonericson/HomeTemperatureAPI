@@ -11,7 +11,7 @@
 	<groupId>com.aericson</groupId>
 	<artifactId>temperatureapi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>temperatureapi</name>
+	<name>temperatureApi</name>
 	<description>Home temperature API</description>
 	<properties>
 		<java.version>17</java.version>
