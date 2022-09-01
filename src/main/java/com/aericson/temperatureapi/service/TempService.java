@@ -14,6 +14,8 @@ import java.util.List;
 @Service
 public class TempService {
 
+    private static final String DATE_REGEX = "/\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+/";
+
     @Autowired
     TempDBRepository tempDBRepository;
 
@@ -24,19 +26,17 @@ public class TempService {
     }
 
     public List<Measurement> getMeasurements(String fromDateString, String toDateString) {
-        if (fromDateString == null && toDateString == null) {
-            return tempDBRepository.findAll();
-        }
-
-        if (fromDateString != null && toDateString != null) {
+        if (isValidDateString(fromDateString) && isValidDateString(toDateString)) {
             return getMeasurementsBetween(fromDateString, toDateString);
         }
-
-        if (fromDateString != null) {
+        if (isValidDateString(fromDateString)) {
             return getMeasurementsAfter(fromDateString);
         }
+        if (isValidDateString(toDateString)) {
+            return getMeasurementsBefore(toDateString);
+        }
 
-        return getMeasurementsBefore(toDateString);
+        return tempDBRepository.findAll();
     }
 
     private List<Measurement> getMeasurementsBefore(String toDateString) {
@@ -53,5 +53,9 @@ public class TempService {
         LocalDateTime fromDate = LocalDateTime.parse(fromDateString);
         LocalDateTime toDate = LocalDateTime.parse(toDateString);
         return tempDBRepository.findByTimeBetween(fromDate, toDate);
+    }
+
+    private boolean isValidDateString(String dateToCheck) {
+        return dateToCheck != null && dateToCheck.matches(DATE_REGEX);
     }
 }
