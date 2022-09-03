@@ -1,7 +1,8 @@
 package com.aericson.temperatureapi.facade;
 
 import com.aericson.temperatureapi.model.Measurement;
-import com.aericson.temperatureapi.model.MeasurementsDTO;
+import com.aericson.temperatureapi.model.MeasurementDTO;
+import com.aericson.temperatureapi.model.MeasurementRequest;
 import com.aericson.temperatureapi.service.TempService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +24,13 @@ public class TempResource {
 
     @CrossOrigin() // TODO Add origin?
     @PostMapping
-    public ResponseEntity<Boolean> addMeasurements(@RequestHeader(name = "uuidKey") String uuidKey, @RequestBody MeasurementsDTO measurementsDTO) throws Exception {
-        return authHelper.isAuthorized(uuidKey) ? tempService.addMeasurement(measurementsDTO) : new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    public ResponseEntity<Boolean> addMeasurements(@RequestHeader(name = "uuidKey") String uuidKey, @RequestBody MeasurementRequest measurementRequest) throws Exception {
+        return authHelper.isAuthorized(uuidKey) ? tempService.addMeasurement(measurementRequest) : new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @CrossOrigin() // TODO Add origin?
     @GetMapping
-    public ResponseEntity<List<Measurement>> getMeasurements(
+    public ResponseEntity<List<MeasurementDTO>> getMeasurements(
             @RequestHeader(name = "uuidKey") String uuidKey,
             @RequestParam(required = false) String fromDate,
             @RequestParam(required = false) String toDate) throws Exception {

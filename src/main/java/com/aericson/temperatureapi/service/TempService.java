@@ -2,13 +2,16 @@ package com.aericson.temperatureapi.service;
 
 import com.aericson.temperatureapi.integration.TempDBRepository;
 import com.aericson.temperatureapi.model.Measurement;
-import com.aericson.temperatureapi.model.MeasurementsDTO;
+import com.aericson.temperatureapi.model.MeasurementDTO;
+import com.aericson.temperatureapi.model.MeasurementData;
+import com.aericson.temperatureapi.model.MeasurementRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,24 +22,32 @@ public class TempService {
     @Autowired
     TempDBRepository tempDBRepository;
 
-    public ResponseEntity<Boolean> addMeasurement(MeasurementsDTO measurementsDTO) {
-        Measurement measurement = new Measurement(measurementsDTO.getTemperature(), measurementsDTO.getHumidity(), measurementsDTO.getSensorId());
+    public ResponseEntity<Boolean> addMeasurement(MeasurementRequest measurementRequest) {
+        Measurement measurement = new Measurement(measurementRequest.getTemperature(), measurementRequest.getHumidity(), measurementRequest.getSensorId());
         Measurement result = tempDBRepository.insert(measurement);
         return result.getTime() != null ? ResponseEntity.ok(true) : new ResponseEntity<Boolean>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public List<Measurement> getMeasurements(String fromDateString, String toDateString) {
+    public List<MeasurementDTO> getMeasurements(String fromDateString, String toDateString) {
+        List<Measurement> measurementsList;
         if (isValidDateString(fromDateString) && isValidDateString(toDateString)) {
-            return getMeasurementsBetween(fromDateString, toDateString);
+            measurementsList = getMeasurementsBetween(fromDateString, toDateString);
         }
-        if (isValidDateString(fromDateString)) {
-            return getMeasurementsAfter(fromDateString);
+        else if (isValidDateString(fromDateString)) {
+            measurementsList = getMeasurementsAfter(fromDateString);
         }
-        if (isValidDateString(toDateString)) {
-            return getMeasurementsBefore(toDateString);
+        else if (isValidDateString(toDateString)) {
+            measurementsList = getMeasurementsBefore(toDateString);
+        }
+        else {
+            measurementsList = tempDBRepository.findAll();
         }
 
-        return tempDBRepository.findAll();
+        // Map measurementList to response object
+        List<MeasurementDTO> response = new ArrayList<>();
+        measurementsList.forEach(measurement -> response.add(new MeasurementDTO(measurement)));
+
+        return response;
     }
 
     private List<Measurement> getMeasurementsBefore(String toDateString) {
