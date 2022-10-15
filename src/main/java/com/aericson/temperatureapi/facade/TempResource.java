@@ -1,7 +1,6 @@
 package com.aericson.temperatureapi.facade;
 
 import com.aericson.temperatureapi.model.Measurement;
-import com.aericson.temperatureapi.model.MeasurementDTO;
 import com.aericson.temperatureapi.model.MeasurementRequest;
 import com.aericson.temperatureapi.service.TempService;
 import org.springframework.http.HttpStatus;
@@ -30,10 +29,17 @@ public class TempResource {
 
     @CrossOrigin() // TODO Add origin?
     @GetMapping
-    public ResponseEntity<List<MeasurementDTO>> getMeasurements(
+    public ResponseEntity<List<Measurement>> getMeasurements(
             @RequestHeader(name = "uuidKey") String uuidKey,
             @RequestParam(required = false) String fromDate,
             @RequestParam(required = false) String toDate) throws Exception {
         return authHelper.isAuthorized(uuidKey) ? ResponseEntity.ok(tempService.getMeasurements(fromDate, toDate)) : new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+
+    @CrossOrigin() // TODO Add origin?
+    @GetMapping(value = "/current")
+    public ResponseEntity<Measurement> getCurrentData(
+            @RequestHeader(name = "uuidKey") String uuidKey) throws Exception {
+        return authHelper.isAuthorized(uuidKey) ? ResponseEntity.ok(tempService.getCurrentMeasurement()) : new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 }

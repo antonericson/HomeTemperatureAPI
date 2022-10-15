@@ -13,4 +13,6 @@ public interface TempDBRepository extends MongoRepository<Measurement, String> {
     List<Measurement> findByTimeLessThan(LocalDateTime toDate);
 
     List<Measurement> findByTimeBetween(LocalDateTime fromDate, LocalDateTime toDate);
+
+    Measurement findFirstByOrderByTimeDesc();
 }
